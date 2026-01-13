@@ -1,0 +1,9 @@
+vendor/
+generated/
+*.tar.gz
+*.zip
+*.ttc
+*.ttf
+*.bdf
+*.o
+*.a
