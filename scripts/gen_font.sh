@@ -14,7 +14,7 @@ PINYIN_DATA="$ROOT/data/PinyinData.h"
 
 FONT_NAME="u8g2_font_wqy18_t_gb2312"
 FONT_SIZE=18
-MAP_FILE="$GENERATED/pinyin_ascii.map"
+MAP_FILE="$ROOT/data/gb2312_level1.map"
 TTF_PATH="$VENDOR/NotoSansSC-Regular.otf"
 OUTPUT_C="$GENERATED/${FONT_NAME}.c"
 SRC_DIR="$ROOT/src"
@@ -52,30 +52,6 @@ if [ ! -x "$OTF2BDF_DIR/otf2bdf" ]; then
 fi
 
 make -C "$BDFCONV_DIR" >/dev/null
-
-# 生成 ASCII + PinyinData.h 覆盖的汉字集合映射表（十进制码点）
-MAP_FILE="$MAP_FILE" PINYIN_DATA="$PINYIN_DATA" python3 - <<'PY'
-import os, re
-from pathlib import Path
-
-chars = set(range(32, 128))  # ASCII printable
-
-pinyin_path = Path(os.environ["PINYIN_DATA"])
-txt = pinyin_path.read_text(encoding="utf-8")
-start = txt.find('R"PINYIN_DICT(')
-end = txt.find(')PINYIN_DICT"', start)
-if start == -1 or end == -1:
-    raise SystemExit("PinyinData.h 未找到 PINYIN_DICT 段")
-body = txt[start + len('R"PINYIN_DICT(') : end]
-for ch in body:
-    if ch.isascii() or ch.isspace():
-        continue
-    chars.add(ord(ch))
-
-path = Path(os.environ["MAP_FILE"])
-path.write_text(",".join(str(c) for c in sorted(chars)), encoding="utf-8")
-print(f"map written to {path}, count={len(chars)}")
-PY
 
 set +e
 "$OTF2BDF_DIR/otf2bdf" \
