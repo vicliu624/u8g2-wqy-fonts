@@ -22,7 +22,7 @@ The script will:
 1) Download u8g2 sources and build `otf2bdf` / `bdfconv`.
 2) Download `NotoSansSC-Regular.otf` (Google open-source Simplified Chinese font subset).
 3) Extract all characters appearing in `data/PinyinData.h`, generate `generated/pinyin_ascii.map` (~6.8k chars).
-4) Generate a 19px whitelist font, syncing to `src/u8g2_font_wqy19_t_gb2312.c` and `include/u8g2_font_wqy19_t_gb2312.h` (current size ~1.5 MB).
+4) Generate an 18px whitelist font, syncing to `src/u8g2_font_wqy18_t_gb2312.c` and `include/u8g2_font_wqy18_t_gb2312.h` (current size ~1.5 MB).
 
 Note: `data/PinyinData.h` is copied from firmware; if the input table changes, sync it here and rerun the script.
 

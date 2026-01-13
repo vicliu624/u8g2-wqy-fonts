@@ -12,8 +12,8 @@ U8G2_TARBALL_URL="https://github.com/olikraus/u8g2/archive/refs/heads/master.tar
 WQY_TTF_URL="https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/SubsetOTF/SC/NotoSansSC-Regular.otf"
 PINYIN_DATA="$ROOT/data/PinyinData.h"
 
-FONT_NAME="u8g2_font_wqy19_t_gb2312"
-FONT_SIZE=19
+FONT_NAME="u8g2_font_wqy18_t_gb2312"
+FONT_SIZE=18
 MAP_FILE="$GENERATED/pinyin_ascii.map"
 TTF_PATH="$VENDOR/NotoSansSC-Regular.otf"
 OUTPUT_C="$GENERATED/${FONT_NAME}.c"

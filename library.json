@@ -1,8 +1,8 @@
 {
   "name": "u8g2-wqy-fonts",
-  "version": "0.1.4",
-  "description": "19px ASCII + PinyinData Chinese whitelist font for U8g2/Adafruit_GFX (T-Deck/T-Deck-Pro).",
-  "keywords": ["u8g2", "font", "chinese", "gb2312", "meshtastic"],
+  "version": "0.2.0",
+  "description": "18px ASCII + PinyinData Chinese whitelist font for U8g2/Adafruit_GFX (T-Deck/T-Deck-Pro).",
+  "keywords": ["u8g2", "font", "chinese", "gb2312", "meshtastic", "18px"],
   "authors": [
     {
       "name": "liu weikai"
