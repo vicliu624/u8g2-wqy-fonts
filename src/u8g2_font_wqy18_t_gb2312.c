@@ -4,7 +4,16 @@
   Glyphs: 3850/30445
   BBX Build Mode: 0
 */
-#ifdef U8G2_USE_LARGE_FONTS
+#include <stdint.h>
+#ifndef U8G2_FONT_SECTION
+#  ifdef __GNUC__
+#    define U8G2_FONT_SECTION(name) __attribute__ ((section(".progmem." name )))
+#  else
+#    define U8G2_FONT_SECTION(name)
+#  endif
+#endif
+
+
 const uint8_t u8g2_font_wqy18_t_gb2312[281686] U8G2_FONT_SECTION("u8g2_font_wqy18_t_gb2312") = 
   "\12\0\3\2\5\5\5\6\6\32\35\377\371\23\372\24\373\3Z\7\272\12\355 \6\0@\320\4!\15d"
   "J\20\215\344\377\35\37\206D\1\42\21\350H\226\305\64L\303\244h\212&\205Q\230\0#$LF\320"
@@ -8809,4 +8818,3 @@ const uint8_t u8g2_font_wqy18_t_gb2312[281686] U8G2_FONT_SECTION("u8g2_font_wqy1
   "uT\227\207\377\77\344\252\216\16\351 \17:\66d;e\1\237\237A\367\306/\277N\36\16\71:\34"
   "tp\336\261]\307v\35\33~\310\206\37\304D\225\255\262U\226\207\17\362\360AVe\253l\225\345\341"
   "\203<|\220U\35\322\61\35\322\61\35\322\301\341\240\243\303A\1\0";
-#endif /* U8G2_USE_LARGE_FONTS */
