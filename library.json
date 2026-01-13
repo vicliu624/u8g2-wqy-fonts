@@ -1,6 +1,6 @@
 {
   "name": "u8g2-wqy-fonts",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "19px ASCII + PinyinData Chinese whitelist font for U8g2/Adafruit_GFX (T-Deck/T-Deck-Pro).",
   "keywords": ["u8g2", "font", "chinese", "gb2312", "meshtastic"],
   "authors": [
