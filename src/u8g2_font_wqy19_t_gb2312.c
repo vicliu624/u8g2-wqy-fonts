@@ -5,6 +5,7 @@
 #  else
 #    define U8G2_FONT_SECTION(name)
 #  endif
+#endif
 /*
   Fontname: -FreeType-Noto Sans SC-Medium-R-Normal--26-190-100-100-P-238-ISO10646-1
   Copyright: © 2014-2021 Adobe (http://www.adobe.com/).
