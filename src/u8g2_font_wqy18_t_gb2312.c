@@ -5,7 +5,16 @@
   BBX Build Mode: 0
 */
 
-#include <u8g2.h>
+
+#include <stdint.h>
+#ifndef U8G2_FONT_SECTION
+#  ifdef __GNUC__
+#    define U8G2_FONT_SECTION(name) __attribute__ ((section(".progmem." name )))
+#  else
+#    define U8G2_FONT_SECTION(name)
+#  endif
+#endif
+
 
 const uint8_t u8g2_font_wqy18_t_gb2312[516375] U8G2_FONT_SECTION("u8g2_font_wqy18_t_gb2312") = 
   "\312\0\3\2\5\5\5\6\6\32\35\377\371\23\372\24\373\3Z\7\272\12\355 \6\0@\320\4!\15d"
