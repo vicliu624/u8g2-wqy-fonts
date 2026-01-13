@@ -1,38 +1,57 @@
 ## u8g2-wqy-fonts
 
-面向 Meshtastic T-Deck/T-Deck-Pro 的轻量级 U8g2 字体库。目标：
-- 生成 19px、高度接近 `FONT_HEIGHT_SMALL`（19px）的 GB2312 字体，保证与现有 UI 字体一致。
-- 保持仓库精简，仅包含生成脚本、字体源（TTF）、生成的 C 文件。
-- 可作为独立 Git 仓库，通过 `platformio.ini` 的 `lib_deps` 仅在 T-Deck/T-Deck-Pro 环境引入。
+Lightweight U8g2 font pack for Meshtastic T-Deck/T-Deck-Pro.
+- 19px font matching `FONT_HEIGHT_SMALL` (19px) visual height.
+- Keep the repo lean: generation script, font source (TTF), generated C file only.
+- Intended to be pulled via `lib_deps` in `platformio.ini` for T-Deck/T-Deck-Pro only.
 
-### 目录
-- `scripts/gen_font.sh`：一键生成字体（下载依赖、编译 bdfconv、生成 C 字体文件）。
-- `vendor/`：存放下载的依赖（u8g2 源码、微米黑字体 TTF）。
-- `generated/`：输出的 U8g2 字体文件（`u8g2_font_wqy19_t_gb2312.c`）。
+### Layout
+- `scripts/gen_font.sh`: one-click generation (download deps, build otf2bdf/bdfconv, produce C font and sync to src/include).
+- `vendor/`: cached deps (u8g2 sources, NotoSansSC subset OTF, etc.).
+- `generated/`: intermediate outputs (BDF, map files, temporary C).
+- `src/`: final C font for PlatformIO builds.
+- `include/`: header for inclusion.
+- `data/`: `PinyinData.h` copied from firmware, used to build the Chinese whitelist.
 
-### 生成步骤
+### Generation steps
 ```bash
 cd /home/vicliu/Projects/meshtastic/u8g2-wqy-fonts
 ./scripts/gen_font.sh
 ```
-脚本会：
-1) 下载 u8g2 源码并编译 `bdfconv`。
-2) 下载 `NotoSansSC-Regular.otf`（Google 开源简体中文字体）。
-3) 生成 19px 的精简字体：只包含 ASCII + `PinyinData.h` 中出现的全部汉字（目前约 6.8k 个，映射表 `generated/pinyin_ascii.map`），输出 `generated/u8g2_font_wqy19_t_gb2312.c`（当前约 1.5 MB）。
+The script will:
+1) Download u8g2 sources and build `otf2bdf` / `bdfconv`.
+2) Download `NotoSansSC-Regular.otf` (Google open-source Simplified Chinese font subset).
+3) Extract all characters appearing in `data/PinyinData.h`, generate `generated/pinyin_ascii.map` (~6.8k chars).
+4) Generate a 19px whitelist font, syncing to `src/u8g2_font_wqy19_t_gb2312.c` and `include/u8g2_font_wqy19_t_gb2312.h` (current size ~1.5 MB).
 
-附：`data/PinyinData.h` 复制自 firmware，用来生成白名单；若后续 firmware 侧更新输入表，请同步到此项目再运行脚本。
+Note: `data/PinyinData.h` is copied from firmware; if the input table changes, sync it here and rerun the script.
 
-#### 依赖
-- gcc、make
-- `freetype-config` / FreeType 开发包（Debian/Ubuntu: `sudo apt-get install libfreetype6-dev pkg-config`）
-- curl、tar
+#### Requirements
+- gcc, make
+- FreeType dev (e.g., `sudo apt-get install libfreetype6-dev pkg-config` on Debian/Ubuntu)
+- curl, tar
 
-### 在 firmware 中的使用建议
-- 在 firmware 的 `platformio.ini` 里为 `t-deck` / `t-deck-pro` 增加本库的 git 地址（`lib_deps`）。
-- 渲染代码（MessageRenderer/CannedMessage 等）使用：
-  - `setFont(u8g2_font_wqy19_t_gb2312);`
-  - `setFontPosTop();`
-  - 行高/基线使用 `getMaxCharHeight()` / `getAscent()` 动态计算，避免硬编码。
+### PlatformIO usage (example)
+In firmware `platformio.ini` (T-Deck/T-Deck-Pro only) add:
+```ini
+lib_deps =
+  https://github.com/vicliu624/u8g2-wqy-fonts.git#v0.1.0
+build_flags =
+  -Iinclude
+```
+In code:
+```cpp
+#include "u8g2_font_wqy19_t_gb2312.h"
+// ...
+u8g2->setFont(u8g2_font_wqy19_t_gb2312);
+u8g2->setFontPosTop();
+const int baseline = y + u8g2->getAscent();
+```
+Compute line height/baseline via `getMaxCharHeight()` / `getAscent()`; avoid hard-coding offsets.
 
-### 重新生成
-- 若需其他字号或字符集，修改 `scripts/gen_font.sh` 中的 `FONT_NAME`、`FONT_SIZE`、`ENCODING` 参数，再运行脚本。
+### Regeneration
+- To change size or charset, tweak parameters in `scripts/gen_font.sh` (`FONT_NAME`, `FONT_SIZE`, whitelist source, etc.) and rerun to resync src/include.
+
+### License
+- Font: Noto Sans CJK SC under SIL Open Font License 1.1.
+- Scripts/code: MIT (see `library.json` / `LICENSE`).

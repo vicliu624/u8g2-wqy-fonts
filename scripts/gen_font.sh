@@ -17,22 +17,24 @@ FONT_SIZE=19
 MAP_FILE="$GENERATED/pinyin_ascii.map"
 TTF_PATH="$VENDOR/NotoSansSC-Regular.otf"
 OUTPUT_C="$GENERATED/${FONT_NAME}.c"
+SRC_DIR="$ROOT/src"
+INC_DIR="$ROOT/include"
 
 mkdir -p "$VENDOR" "$GENERATED"
 
-echo "[1/3] 下载 u8g2 源码..."
+echo "[1/3] Download u8g2 sources..."
 if [ ! -d "$VENDOR/u8g2" ]; then
     curl -L --retry 5 --retry-delay 2 --fail "$U8G2_TARBALL_URL" -o "$VENDOR/u8g2.tar.gz"
     tar -xf "$VENDOR/u8g2.tar.gz" -C "$VENDOR"
     mv "$VENDOR"/u8g2-* "$VENDOR/u8g2"
 fi
 
-echo "[2/3] 下载中文字体 (NotoSansSC-Regular)..."
+echo "[2/3] Download font (NotoSansSC-Regular)..."
 if [ ! -f "$TTF_PATH" ]; then
     curl -L --retry 5 --retry-delay 2 --fail "$WQY_TTF_URL" -o "$TTF_PATH"
 fi
 
-echo "[3/3] 编译 bdfconv 并生成 ${FONT_NAME}.c ..."
+echo "[3/3] Build bdfconv and generate ${FONT_NAME}.c ..."
 if [ ! -x "$OTF2BDF_DIR/otf2bdf" ]; then
     if command -v freetype-config >/dev/null 2>&1; then
         chmod +x "$OTF2BDF_DIR/configure"
@@ -45,7 +47,7 @@ if [ ! -x "$OTF2BDF_DIR/otf2bdf" ]; then
     fi
 fi
 if [ ! -x "$OTF2BDF_DIR/otf2bdf" ]; then
-    echo "otf2bdf 构建失败，请确认系统已安装 freetype 开发工具链（libfreetype-dev, pkg-config 等）。" >&2
+    echo "otf2bdf build failed; ensure freetype dev and pkg-config are installed." >&2
     exit 1
 fi
 
@@ -84,7 +86,7 @@ set +e
 OTF2BDF_RC=$?
 set -e
 if [ ! -s "$BDF_TMP" ]; then
-    echo "otf2bdf 生成 BDF 失败 (rc=$OTF2BDF_RC)" >&2
+    echo "otf2bdf failed to produce BDF (rc=$OTF2BDF_RC)" >&2
     exit 1
 fi
 
@@ -96,5 +98,21 @@ fi
     -o "$OUTPUT_C" \
     "$BDF_TMP"
 
-echo "生成完成: $OUTPUT_C"
+echo "Font generated: $OUTPUT_C"
 ls -lh "$OUTPUT_C"
+
+# 同步到 src/ 与 include/
+mkdir -p "$SRC_DIR" "$INC_DIR"
+cp "$OUTPUT_C" "$SRC_DIR/"
+cat > "$INC_DIR/${FONT_NAME}.h" <<EOF
+#pragma once
+#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+extern const uint8_t ${FONT_NAME}[];
+#ifdef __cplusplus
+}
+#endif
+EOF
+echo "Synced to $SRC_DIR/ and $INC_DIR/${FONT_NAME}.h"

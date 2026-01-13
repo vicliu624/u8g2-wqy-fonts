@@ -1,5 +1,6 @@
 vendor/
 generated/
+@@MAP_FILE@@
 *.tar.gz
 *.zip
 *.ttc
