@@ -1,5 +1,11 @@
 #include <stdint.h>
-#include <u8g2.h>
+#ifndef U8G2_FONT_SECTION
+#  ifdef __GNUC__
+#    define U8G2_FONT_SECTION(name) __attribute__ ((section(".progmem." name )))
+#  else
+#    define U8G2_FONT_SECTION(name)
+#  endif
+#endif
 /*
   Fontname: -FreeType-Noto Sans SC-Medium-R-Normal--26-190-100-100-P-238-ISO10646-1
   Copyright: © 2014-2021 Adobe (http://www.adobe.com/).
