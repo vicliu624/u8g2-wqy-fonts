@@ -5,14 +5,12 @@
 #  else
 #    define U8G2_FONT_SECTION(name)
 #  endif
-#endif
 /*
   Fontname: -FreeType-Noto Sans SC-Medium-R-Normal--26-190-100-100-P-238-ISO10646-1
   Copyright: © 2014-2021 Adobe (http://www.adobe.com/).
   Glyphs: 6858/30445
   BBX Build Mode: 0
 */
-#ifdef U8G2_USE_LARGE_FONTS
 const uint8_t u8g2_font_wqy19_t_gb2312[546492] U8G2_FONT_SECTION("u8g2_font_wqy19_t_gb2312") = 
   "\312\0\3\2\5\5\5\6\6\33\37\377\370\24\372\26\373\3\312\10\207\13\375 \6\0@\320\4!\15\203"
   "N\60\205\342\377;\222\14\203\2\42\22\10\311\266\305\66h\203\66h\212\246h\212\246\204\2#$mF"
